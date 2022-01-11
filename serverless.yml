@@ -1,0 +1,89 @@
+service: smarthome-api
+frameworkVersion: '2.71.0'
+
+package:
+  excludeDevDependencies: true
+  exclude:
+    - src/**  # Don't package up raw .ts files. We only care about /build/
+
+custom:
+  # Use the --stage CLI option if it exists, otherwise use the default stage specified by provider.stage
+  stage: ${opt:stage, self:provider.stage}
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: '20201221'
+  stage: dev
+  profile: ${env:IAM_PROFILE}  # AWS credentials profile
+  region: us-east-1  # Has to be us-east-1 to make custom domains work with serverless
+  memorySize: 512
+  timeout: 6
+  logRetentionInDays: 14
+  httpApi:
+    cors:
+      allowedOrigins:
+        - ${env:DOMAIN}
+        - ${env:DEV_DOMAIN}
+      allowedMethods:
+        - GET
+        - OPTIONS
+        - POST
+        - PUT
+        - DELETE
+      allowedHeaders:
+        # FIXME: What should be included here? Do we need additional cloudfront headers?
+        - Content-Type
+        - X-Amz-Date
+        - Authorization
+        - X-Api-Key
+        - X-Amz-Security-Token
+        - X-Amz-User-Agent
+        - X-Transaction-Key
+        - Access-Control-Allow-Origin
+      allowCredentials: true
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - logs:GetLogEvents
+      Resource: '*'
+  environment:
+    # Allows us to reference variables in code with process.env.<KEY>
+    STAGE: ${self:custom.stage}
+    APP_NAME: ${env:APP_NAME}  # Made available in deploy.js
+    DOMAIN: ${env:DOMAIN}
+    DEV_DOMAIN: ${env:DEV_DOMAIN}
+    JWT_SECRET: ${env:JWT_SECRET}  # Made available in deploy.js
+    HASHED_PASSWORD: ${env:HASHED_PASSWORD}  # Made available in deploy.js
+
+functions:
+  # Authentication
+  auth:
+    handler: build/handlers/auth.handler
+    events:
+      - httpApi:
+          path: /auth
+          method: POST
+      - httpApi:
+          path: /auth
+          method: GET
+  # Sensors
+  sensors:
+    handler: build/handlers/sensors.handler
+    events:
+      - httpApi:
+          path: /sensors
+          method: GET
+      - httpApi:
+          path: /sensors
+          method: POST
+
+resources:
+  - ${file(resources/dynamodb.yml)}
+

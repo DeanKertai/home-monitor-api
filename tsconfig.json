@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "outDir": "./build",
+        "allowJs": false,
+        "target": "ES2017",
+        "module": "CommonJS",
+        "moduleResolution": "node",
+        "removeComments": true,
+        "incremental": true,
+        "diagnostics": true,
+        "noImplicitAny": true,
+        "pretty": false,
+        "alwaysStrict": true,
+        "noImplicitReturns": true,
+        "noUncheckedIndexedAccess": true,
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitThis": true,
+        "noUnusedParameters": false,
+        "noUnusedLocals": false,
+        "esModuleInterop": true,  // Needed for aws-sdk
+        "strictNullChecks": true,
+        "skipLibCheck": true,
+    },
+    "include": ["./src/**/*"],
+    "exclude": [
+        "node_modules", 
+        "**/*.spec.ts",
+    ]
+}
