@@ -4,6 +4,9 @@ import {
 } from 'aws-lambda';
 import { ApiError } from './errors';
 import * as JWT from 'jsonwebtoken';
+import * as dotenv from 'dotenv';
+
+dotenv.config({ path: 'generated.env' });
 
 
 /**

@@ -17,6 +17,9 @@ import {
 } from '@aws-sdk/client-dynamodb';
 import { convertToAttr, marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { ApiError } from './errors';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 const client = new DynamoDBClient({ region: 'us-east-1' });
 
 

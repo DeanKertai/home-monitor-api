@@ -7,9 +7,14 @@ import { ApiError, getErrorResponse } from '../errors';
 import { ApiResponse } from '../models/api-response';
 import { getResponse } from '../response';
 import { PostAuthBody, postAuthSchema } from '../schema/post-auth';
-import { Validate } from '../utils';
+import { getBodyJSON, Validate } from '../utils';
 import { compare } from 'bcrypt';
 import { ResponseAuthPost } from '../models/responses/res-auth-post';
+import * as dotenv from 'dotenv';
+
+dotenv.config({
+    path: 'generated.env',
+});
 
 
 export async function handler(event: ApiEvent<Context>, context: Context): Promise<ApiResponse> {
@@ -41,7 +46,7 @@ async function handleGet(event: ApiEvent<Context>, context: Context): Promise<Ap
  * The user or device provides a password, and if it is valid, a signed JWT is returned
  */
 async function handlePost(event: ApiEvent<Context>, context: Context): Promise<ApiResponse> {
-    const body = event.body ? JSON.parse(event.body) : '';
+    const body = getBodyJSON(event);
     const postParams = Validate<PostAuthBody>(postAuthSchema, body);
     try {
         if (!process.env.HASHED_PASSWORD) {
