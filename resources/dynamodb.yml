@@ -1,20 +1,32 @@
 Resources:
     # Temperature
-    userTable:
+    temperatureTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${env:APP_NAME}-${self:custom.stage}-temperatures
+        TableName: ${env:APP_NAME}-${self:custom.stage}-temperature
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
           - AttributeName: deviceId
             AttributeType: S
           - AttributeName: timestamp
-            AttributeType: S
+            AttributeType: N
         KeySchema:
           - AttributeName: deviceId
             KeyType: HASH  # Partition key
           - AttributeName: timestamp
             KeyType: RANGE  # Sort key
-        TimeToLiveSpecification:
-          AttributeName: ttl
-          Enabled: true
+    humidityTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${env:APP_NAME}-${self:custom.stage}-humidity
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: deviceId
+            AttributeType: S
+          - AttributeName: timestamp
+            AttributeType: N
+        KeySchema:
+          - AttributeName: deviceId
+            KeyType: HASH  # Partition key
+          - AttributeName: timestamp
+            KeyType: RANGE  # Sort key
