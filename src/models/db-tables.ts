@@ -1,3 +1,4 @@
 export enum DbTables {
-    Temperatures = 'temperatures',
+    Temperature = 'temperature',
+    Humidity = 'humidity',
 }
