@@ -27,6 +27,13 @@ using Lambda functions and DynamoDB for the database.
 
     # URL used for local testing
     DEV_DOMAIN=http://localhost:3000
+
+    # Open Weather Map API is used for getting outside temperature
+    OPEN_WEATHER_MAP_API_KEY=abc123...
+
+    # Latitude and longitude is needed for getting outside temperature
+    LATITUDE=50
+    LONGITUDE=-104
     ```
 1. Install NodeJS and NPM: https://nodejs.org/en/download/
 1. Install the serverless framework  
