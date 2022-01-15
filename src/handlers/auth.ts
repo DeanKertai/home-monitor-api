@@ -4,13 +4,13 @@ import {
 } from 'aws-lambda';
 import { signJWT, verifyToken } from '../auth-utils';
 import { ApiError, getErrorResponse } from '../errors';
-import { ApiResponse } from '../models/api-response';
 import { getResponse } from '../response';
-import { PostAuthBody, postAuthSchema } from '../schema/post-auth';
 import { getBodyJSON, Validate } from '../utils';
 import { compare } from 'bcrypt';
 import { ResponseAuthPost } from '../models/responses/res-auth-post';
 import * as dotenv from 'dotenv';
+import { ApiResponse } from '../models/responses/api-response';
+import { PostAuthBody, postAuthSchema } from '../models/schema/post-auth';
 
 dotenv.config({
     path: 'generated.env',

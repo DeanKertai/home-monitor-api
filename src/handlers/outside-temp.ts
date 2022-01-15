@@ -1,10 +1,10 @@
 import * as dotenv from 'dotenv';
 import axios from 'axios';
 import { putItem } from '../db';
-import { DbTables } from '../models/db-tables';
-import { SpecialDevices } from '../models/special-devices';
 import { DbHumidity } from '../models/tables/db-humidity';
 import { DbTemperature } from '../models/tables/db-temperature';
+import { DbTables } from '../models/tables/db-tables';
+import { SpecialDevices } from '../models/common/special-devices';
 
 dotenv.config();
 

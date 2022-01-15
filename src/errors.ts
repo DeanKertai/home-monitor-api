@@ -2,8 +2,8 @@ import {
     APIGatewayProxyEventV2WithRequestContext as ApiEvent,
     APIGatewayEventRequestContextV2 as Context
 } from 'aws-lambda';
-import { ErrorResponse } from './models/api-error-response';
-import { ApiResponse } from './models/api-response';
+import { ErrorResponse } from './models/responses/api-error-response';
+import { ApiResponse } from './models/responses/api-response';
 import { getResponse } from './response';
 
 export class ApiError {

@@ -4,16 +4,15 @@ import {
 } from 'aws-lambda';
 import { verifyToken } from '../auth-utils';
 import { ApiError, getErrorResponse } from '../errors';
-import { ApiResponse } from '../models/api-response';
-import { getResponse } from '../response';
-import { postAuthSchema } from '../schema/post-auth';
 import { getBodyJSON, Validate } from '../utils';
-import { GetTemperatureQuery, getTemperatureQuerySchema } from '../schema/get-temperature';
 import { getFromTo, putItem } from '../db';
-import { DbTables } from '../models/db-tables';
 import { ResponseTemperatureGet } from '../models/responses/res-temperature-get';
 import { DbTemperature } from '../models/tables/db-temperature';
-import { PostTemperatureBody, postTemperatureSchema } from '../schema/post-temperature';
+import { ApiResponse } from '../models/responses/api-response';
+import { GetTemperatureQuery, getTemperatureQuerySchema } from '../models/schema/get-temperature';
+import { getResponse } from '../response';
+import { PostTemperatureBody, postTemperatureSchema } from '../models/schema/post-temperature';
+import { DbTables } from '../models/tables/db-tables';
 
 
 export async function handler(event: ApiEvent<Context>, context: Context): Promise<ApiResponse> {

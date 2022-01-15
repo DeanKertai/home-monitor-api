@@ -2,7 +2,7 @@ import {
     APIGatewayProxyEventV2WithRequestContext as ApiEvent,
     APIGatewayEventRequestContextV2 as Context
 } from 'aws-lambda';
-import { ApiResponse } from './models/api-response';
+import { ApiResponse } from './models/responses/api-response';
 
 
 export async function getResponse(

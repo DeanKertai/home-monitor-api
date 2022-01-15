@@ -44,6 +44,10 @@ using Lambda functions and DynamoDB for the database.
     ```
     npm i
     ```
+1. Initialize the models submodule
+    ```bash
+    git submodule add git@github.com:DeanKertai/home-monitor-models.git src/models
+    ```
 
 ## Deploying
 After completing the setup instructions above, you can deploy the API to
