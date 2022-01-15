@@ -56,11 +56,6 @@ provider:
   environment:
     # Allows us to reference variables in code with process.env.<KEY>
     STAGE: ${self:custom.stage}
-    APP_NAME: ${env:APP_NAME}  # Made available in deploy.js
-    DOMAIN: ${env:DOMAIN}
-    DEV_DOMAIN: ${env:DEV_DOMAIN}
-    JWT_SECRET: ${env:JWT_SECRET}  # Made available in deploy.js
-    HASHED_PASSWORD: ${env:HASHED_PASSWORD}  # Made available in deploy.js
 
 functions:
   # Authentication
@@ -73,16 +68,21 @@ functions:
       - httpApi:
           path: /auth
           method: GET
-  # Sensors
-  sensors:
-    handler: build/handlers/sensors.handler
+  # Temperature
+  temperature:
+    handler: build/handlers/temperature.handler
     events:
       - httpApi:
-          path: /sensors
+          path: /temperature
           method: GET
       - httpApi:
-          path: /sensors
+          path: /temperature
           method: POST
+  # Outside temp (scheduled)
+  outsideTemp:
+    handler: build/handlers/outside-temp.handler
+    events:
+      - schedule: rate(30 minutes)
 
 resources:
   - ${file(resources/dynamodb.yml)}
