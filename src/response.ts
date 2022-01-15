@@ -5,10 +5,6 @@ import {
 import { ApiResponse } from './models/api-response';
 
 
-const allowedProdOrigin = process.env.DOMAIN;
-const allowedDevOrigin = process.env.DEV_DOMAIN;
-
-
 export async function getResponse(
     code: number,
     event: ApiEvent<Context>,
@@ -33,14 +29,6 @@ export async function getResponse(
             throw new Error('Event parameter was not supplied to Success response');
         }
 
-        if (!event.headers?.origin) {
-            throw new Error('Missing request origin header');
-        }
-
-        if (!isOriginAllowed(event.headers.origin)) {
-            throw new Error(`Request origin (${event.headers.origin}) is not in whitelist`);
-        }
-
         response = {
             statusCode: code,
             headers: {
@@ -50,7 +38,7 @@ export async function getResponse(
                 'Access-Control-Allow-Methods': 'GET,HEAD,OPTIONS,POST,PUT,DELETE',
                 'X-Frame-Options': 'SAMEORIGIN',
                 'X-XSS-Protection': '1',
-                'Access-Control-Allow-Origin': event.headers.origin,
+                'Access-Control-Allow-Origin': '*',
             },
             body: body ? JSON.stringify(body) : undefined,
         };
@@ -62,13 +50,4 @@ export async function getResponse(
     }
 
     return response;
-}
-
-
-/**
- * Returns true if the origin is in the whitelist for the current stage
- */
-function isOriginAllowed(requestOrigin: string): boolean {
-    const allowedOrigin = process.env.NODE_ENV === 'production' ? allowedProdOrigin : allowedDevOrigin;
-    return requestOrigin === allowedOrigin;
 }
