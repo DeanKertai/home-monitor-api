@@ -99,6 +99,44 @@ export async function getAll<T>(
 
 
 /**
+ * Get all of the items for a partition key where the 'timestamp' column
+ * is between the provided timestamps 'from' and 'to'.
+ */
+export async function getFromTo<T>(
+    tableName: string,
+    keyName: string,
+    keyValue: string | number,
+    sortKeyName: string,
+    from: string | number,
+    to: string | number,
+): Promise<T[] | undefined> {
+
+    const params: QueryCommandInput = {
+        TableName : getTableName(tableName),
+        KeyConditionExpression: '#keyName = :keyValue and #time BETWEEN :from AND :to',
+        ExpressionAttributeNames:{
+            '#keyName': keyName,
+            '#time': sortKeyName,
+        },
+        ExpressionAttributeValues: {
+            ':keyValue': convertToAttr(keyValue),
+            ':from': convertToAttr(from),
+            ':to': convertToAttr(to),
+        },
+    };
+    console.log('Getting items from database with these params:');
+    console.log(JSON.stringify(params));
+    const command = new QueryCommand(params);
+    const result = await client.send(command);
+    if (result.Items) {
+        console.log(`DB returned ${result.Items?.length || 0} items`);
+        return result.Items.map(item => unmarshall(item) as T);
+    }
+    return undefined;
+};
+
+
+/**
  * Scan a table
  */
  export async function scanTable<T>(
