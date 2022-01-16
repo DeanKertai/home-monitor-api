@@ -49,7 +49,7 @@ async function handleGet(event: ApiEvent<Context>, context: Context): Promise<Ap
             deviceId: queryParams.deviceId,
             results,
         }
-        return await getResponse(200, event, context, results);
+        return await getResponse(200, event, context, response);
     }
 }
 
