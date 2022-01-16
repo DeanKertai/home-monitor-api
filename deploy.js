@@ -14,6 +14,7 @@ const requiredEnvVariables = [
     'APP_NAME',
     'IAM_PROFILE',
     'DOMAIN',
+    'DEV_DOMAIN',
 ];
 
 
