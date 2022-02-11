@@ -18,6 +18,7 @@ import {
 import { convertToAttr, marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { ApiError } from './errors';
 import * as dotenv from 'dotenv';
+import { DbTables } from './models/tables/db-tables';
 
 dotenv.config();
 const client = new DynamoDBClient({ region: 'us-east-1' });
@@ -39,7 +40,7 @@ export function getTableName(name: string): string {
  * Get a single item from the database
  */
 export async function getItem<T>(
-    tableName: string,
+    tableName: DbTables,
     keyName: string,
     keyValue: string | number,
     sortName?: string,
@@ -72,7 +73,7 @@ export async function getItem<T>(
  * Get all of the items for a partition key
  */
 export async function getAll<T>(
-    tableName: string,
+    tableName: DbTables,
     keyName: string,
     keyValue: string | number,
 ): Promise<T[] | undefined> {
@@ -103,7 +104,7 @@ export async function getAll<T>(
  * is between the provided timestamps 'from' and 'to'.
  */
 export async function getFromTo<T>(
-    tableName: string,
+    tableName: DbTables,
     keyName: string,
     keyValue: string | number,
     sortKeyName: string,
@@ -140,8 +141,8 @@ export async function getFromTo<T>(
  * Scan a table
  */
  export async function scanTable<T>(
-    tableName: string,
-    limit: number,
+    tableName: DbTables,
+    limit?: number,
 ): Promise<T[] | undefined> {
     const params: ScanCommandInput = {
         TableName : getTableName(tableName),
@@ -167,7 +168,7 @@ export async function getFromTo<T>(
  * Get all items from a table with the given GSI key/value
  */
 export async function getUsingGSI<T>(
-    tableName: string,
+    tableName: DbTables,
     indexName: string,
     indexKey: string,
     indexValue: string,
@@ -207,7 +208,7 @@ export async function getUsingGSI<T>(
 /**
  * Put item in the database
  */
-export async function putItem<T>(tableName: string, item: T): Promise<void> {
+export async function putItem<T>(tableName: DbTables, item: T): Promise<void> {
     const params: PutItemCommandInput = {
         TableName : getTableName(tableName),
         Item: marshall(item, { removeUndefinedValues: true }),
@@ -225,7 +226,7 @@ export async function putItem<T>(tableName: string, item: T): Promise<void> {
  * Delete a single item from the database
  */
 export async function deleteItem(
-    tableName: string,
+    tableName: DbTables,
     keyName: string,
     keyValue: string | number,
     sortName?: string | number,
