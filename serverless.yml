@@ -1,5 +1,5 @@
 service: smarthome-api
-frameworkVersion: '2.72.0'
+frameworkVersion: '3.22.0'
 
 package:
   excludeDevDependencies: true

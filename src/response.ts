@@ -4,6 +4,11 @@ import {
 } from 'aws-lambda';
 import { ApiResponse } from './models/responses/api-response';
 
+const allowedOrigins = [
+  process.env.DOMAIN,
+  process.env.DEV_DOMAIN,
+];
+
 
 export async function getResponse(
     code: number,
@@ -29,16 +34,28 @@ export async function getResponse(
             throw new Error('Event parameter was not supplied to Success response');
         }
 
+        const origin = event.headers.origin;
+        console.log('Origin', origin);
+        if (!origin) {
+          console.error('CORS error. Missing origin header in request');
+          return { statusCode: 400 };
+        }
+        let matchedOrigin = allowedOrigins.find(o => o === origin);
+        if (!matchedOrigin) {
+          return { statusCode: 401 };
+        }
+
         response = {
             statusCode: code,
             headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Credentials' : true, // Required for cookies, authorization headers with HTTPS
-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-                'Access-Control-Allow-Methods': 'GET,HEAD,OPTIONS,POST,PUT,DELETE',
-                'X-Frame-Options': 'SAMEORIGIN',
-                'X-XSS-Protection': '1',
-                'Access-Control-Allow-Origin': '*',
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Credentials' : true, // Required for cookies, authorization headers with HTTPS
+              'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Kiosk-Player-ID',
+              'Access-Control-Allow-Methods': 'GET,HEAD,OPTIONS,POST,PUT,DELETE',
+              'Access-Control-Allow-Origin': matchedOrigin,
+              'Access-Control-Max-Age': 7200,  // How long the preflight requests can be cached
+              'X-Frame-Options': 'SAMEORIGIN',
+              'X-XSS-Protection': '1',
             },
             body: body ? JSON.stringify(body) : undefined,
         };
